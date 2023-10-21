@@ -6,18 +6,20 @@
  */
 
 #include "../MCAL/DIO/Dio.h"
+#include "../HAL/Seven_Segment/Ssd.h"
+
 
 int main()
 {
-    DIO_PrephieralType* port = ( DIO_PrephieralType*)0x39;
+
+	SS_Init();
+    DIO_SetPinDirection(DIO_PORTA, DIO_PIN6, DIO_DIRECTION_OUTPUT);
 
     while(1)
     {
-    	DIO_SetPinDirection(port, DIO_PIN5, DIO_DIRECTION_OUTPUT);
-        DIO_SetPinValue(port, DIO_PIN5, DIO_VALUE_HIGH);
+    	SS_DisplayNumber(0);
 
+        DIO_SetPinValue(DIO_PORTA, DIO_PIN6, DIO_VALUE_HIGH);
     }
 
-
 }
-
