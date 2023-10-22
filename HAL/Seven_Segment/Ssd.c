@@ -6,9 +6,8 @@
  */
 
 
-#include "../../Private/Math.h"
+#include "../../Private/Types.h"
 #include "../../MCAL/DIO/Dio.h"
-#include "Ssd_Cfg.h"
 #include "Ssd.h"
 
 void SS_Init(void)
