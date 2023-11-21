@@ -23,14 +23,14 @@ ISR(VECTOR_EXT_INT0)
 
 ISR(VECTOR_EXT_INT1)
 {
-    if (NULL_PTR != callback_EXT_INT[0]) {
+    if (NULL_PTR != callback_EXT_INT[1]) {
         callback_EXT_INT[1]();
     }
 }
 
 ISR(VECTOR_EXT_INT2)
 {
-    if (NULL_PTR != callback_EXT_INT[0]) {
+    if (NULL_PTR != callback_EXT_INT[2]) {
         callback_EXT_INT[2]();
     }
 }
@@ -83,3 +83,4 @@ void Extint_SetCallback(ExtInt_IDType id, void (*funcptr)(void))
         break;
     }
 }
+

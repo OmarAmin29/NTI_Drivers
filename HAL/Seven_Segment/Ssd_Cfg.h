@@ -19,4 +19,3 @@
 
 
 #endif /* HAL_SEVEN_SEGMENT_SSD_CFG_H_ */
-

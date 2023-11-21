@@ -7,48 +7,59 @@
 
 #include "../../Private/Types.h"
 #include"../../MCAL/DIO/Dio.h"
+#include<util/delay.h>
+#include"Keypad_Cfg.h"
 #include"Keypad.h"
+
 
 
 void Keypad_Init(void)
 {
-    /*Configure all the columns to input*/
-    DIO_SetPinDirection(KEYPAD_CO, DIO_DIRECTION_INPUT_FLOATING);
-    DIO_SetPinDirection(KEYPAD_C1, DIO_DIRECTION_INPUT_FLOATING);
-    DIO_SetPinDirection(KEYPAD_C2, DIO_DIRECTION_INPUT_FLOATING);
-    DIO_SetPinDirection(KEYPAD_C3, DIO_DIRECTION_INPUT_FLOATING);
+	/*Configure all columns to be input pull up */
+    DIO_SetPinDirection(KEYPAD_PORT_COLUMN0,KEYPAD_PIN_COLUMN0,DIO_DIRECTION_INPUT_PULLUP);
+    DIO_SetPinDirection(KEYPAD_PORT_COLUMN1,KEYPAD_PIN_COLUMN1,DIO_DIRECTION_INPUT_PULLUP);
+    DIO_SetPinDirection(KEYPAD_PORT_COLUMN2,KEYPAD_PIN_COLUMN2,DIO_DIRECTION_INPUT_PULLUP);
+    DIO_SetPinDirection(KEYPAD_PORT_COLUMN3,KEYPAD_PIN_COLUMN3,DIO_DIRECTION_INPUT_PULLUP);
 
-    /*Configure all the rows to output*/
-    DIO_SetPinDirection(KEYPAD_RO, DIO_DIRECTION_OUTPUT);
-    DIO_SetPinDirection(KEYPAD_R1, DIO_DIRECTION_OUTPUT);
-    DIO_SetPinDirection(KEYPAD_R2, DIO_DIRECTION_OUTPUT);
-    DIO_SetPinDirection(KEYPAD_R3, DIO_DIRECTION_OUTPUT);
+    /*Configure all rows to be output*/
+    DIO_SetPinDirection(KEYPAD_PORT_ROW0,KEYPAD_PIN_ROW0,DIO_DIRECTION_OUTPUT);
+    DIO_SetPinDirection(KEYPAD_PORT_ROW1,KEYPAD_PIN_ROW1,DIO_DIRECTION_OUTPUT);
+    DIO_SetPinDirection(KEYPAD_PORT_ROW2,KEYPAD_PIN_ROW2,DIO_DIRECTION_OUTPUT);
+    DIO_SetPinDirection(KEYPAD_PORT_ROW3,KEYPAD_PIN_ROW3,DIO_DIRECTION_OUTPUT);
 
-    /*Configure all the columns to low*/
-    DIO_SetPinValue(KEYPAD_RO, DIO_VALUE_HIGH);
-    DIO_SetPinValue(KEYPAD_R1, DIO_VALUE_HIGH);
-    DIO_SetPinValue(KEYPAD_R2, DIO_VALUE_HIGH);
-    DIO_SetPinValue(KEYPAD_R3, DIO_VALUE_HIGH);
+    /* Set all rows to high */
+    DIO_SetPinValue(KEYPAD_PORT_ROW0,KEYPAD_PIN_ROW0,DIO_VALUE_HIGH);
+    DIO_SetPinValue(KEYPAD_PORT_ROW1,KEYPAD_PIN_ROW1,DIO_VALUE_HIGH);
+    DIO_SetPinValue(KEYPAD_PORT_ROW2,KEYPAD_PIN_ROW2,DIO_VALUE_HIGH);
+    DIO_SetPinValue(KEYPAD_PORT_ROW3,KEYPAD_PIN_ROW3,DIO_VALUE_HIGH);
 }
 
-Keypad_ButtonSTateType Keypad_GetButtonState(Keypad_ButtonType button)
+
+u8 Keypad_GetButtonState(void)
 {
-    Keypad_ButtonSTateType state = KEYPAD_BUTTON_NOT_PRESSED;
+    u8 i,j;
+    u8 keypad_arr[4][4] = KEYPAD_CALC;
+    u8 row_pin[] = {KEYPAD_PIN_ROW0,KEYPAD_PIN_ROW1,KEYPAD_PIN_ROW2,KEYPAD_PIN_ROW3};
+    u8 column_pin[] = {KEYPAD_PIN_COLUMN0,KEYPAD_PIN_COLUMN1,KEYPAD_PIN_COLUMN2,KEYPAD_PIN_COLUMN3};
+    u8 key = 0;
 
-    switch (button)
+    for(i = 0; i < 4; i++)
     {
-    case KEYPAD_BUTTON_00:
-        DIO_SetPinValue(KEYPAD_CO,DIO_VALUE_HIGH);
-        if(DIO_GetPinValue(KEYPAD_RO) == DIO_VALUE_HIGH)
+        DIO_SetPinValue(KEYPAD_PORT_ROW,row_pin[i],DIO_VALUE_LOW);
+        for(j = 0; j < 4; j++)
         {
-            state = KEYPAD_BUTTON_PRESSED;
+            if(DIO_GetPinValue(KEYPAD_PORT_COLUMN,column_pin[j]) == DIO_VALUE_LOW)
+            {
+                _delay_ms(10);
+                if(DIO_GetPinValue(KEYPAD_PORT_COLUMN,column_pin[j]) == DIO_VALUE_LOW)
+                {
+                	while(DIO_GetPinValue(KEYPAD_PORT_COLUMN,column_pin[j]) == DIO_VALUE_LOW);
+                    key = keypad_arr[i][j];
+                }
+            }
         }
-        DIO_SetPinValue(KEYPAD_CO,DIO_VALUE_LOW);
-        break;
-    
-    default:
-        break;
+        DIO_SetPinValue(KEYPAD_PORT_ROW,row_pin[i],DIO_VALUE_HIGH);
     }
-
-    return state;
+    return key;
 }
+

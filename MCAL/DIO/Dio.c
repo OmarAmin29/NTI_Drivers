@@ -6,7 +6,7 @@
  */
 
 
-
+#include "Dio_Priv.h"
 #include "Dio.h"
 
 void DIO_SetPinDirection(DIO_PrephieralType* port, DIO_PinType pin, DIO_DirectionType direction)

@@ -14,7 +14,7 @@
 #include "Dio_Cfg.h"
 #include "Dio_Priv.h"
 
-typedef union
+/*typedef union
 {
     u8 reg;
     struct
@@ -28,7 +28,6 @@ typedef union
         u8 B6 : 1;
         u8 B7 : 1;
     }BIT;
-    
 }DIO_RegisterType;
 
 
@@ -38,7 +37,7 @@ typedef struct
     DIO_RegisterType pin;
     DIO_RegisterType ddr;
     DIO_RegisterType port;
-}DIO_PrephieralType;
+}DIO_PrephieralType;*/
 
 typedef enum
 {
@@ -79,5 +78,4 @@ u8   DIO_GetPortValue(DIO_PrephieralType* port);
 
 
 #endif /* DIO_DIO_H_ */
-
 
